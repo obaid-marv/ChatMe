@@ -1,8 +1,8 @@
-// src/app/api/auth/me/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import User from '../../../models/User';
 import { dbConnect } from '../../../utils/dbConnect';
 import { verifyToken } from '../../../middlewares/verifyToken';
+import { JwtPayload } from 'jsonwebtoken'; // Import the JwtPayload type
 
 export async function GET(req: NextRequest) {
   await dbConnect();
@@ -16,13 +16,13 @@ export async function GET(req: NextRequest) {
 
   // Verify the token
   const decodedToken = verifyToken(token);
-  if (!decodedToken) {
+  if (!decodedToken || typeof decodedToken === 'string') {
     return NextResponse.json({ message: 'Invalid or expired token' }, { status: 401 });
   }
 
   try {
     // Fetch the user from the database based on the userId stored in the token
-    const user = await User.findById(decodedToken.id).select('_id username email');
+    const user = await User.findById((decodedToken as JwtPayload).id).select('_id username email');
     
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
