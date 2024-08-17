@@ -57,10 +57,9 @@ const ChatMessage = () => {
     if (message.trim()) {
       const newMessage = { content: message, senderId: user?._id };
 
-      // Update the sender's screen immediately
+      
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-      // Emit the message to the recipient via the socket
       socket.emit('private_message', { to: userId, content: message, senderId: user?._id });
 
       setMessage('');
