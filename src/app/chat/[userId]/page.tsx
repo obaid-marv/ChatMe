@@ -39,7 +39,7 @@ const ChatMessage = () => {
   }, [userId, user?._id]);
 
   useEffect(() => {
-    const socketInstance = io('http://localhost:3001');
+    const socketInstance = io('http://ec2-13-51-150-187.eu-north-1.compute.amazonaws.com');
     setSocket(socketInstance);
 
     socketInstance.emit('user_connected', user?._id);
