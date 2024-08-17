@@ -8,21 +8,25 @@ import dotenv from 'dotenv'
 
 const app = express();
 dotenv.config();
-const server = createServer(app); // Use createServer instead of http.createServer
+app.use(express.json())
+app.get('/', (req,res)=> {
+  res.json("Hi socket")
+})
+
+
+const server = createServer(app); 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Your frontend URL
+    origin: "http://localhost:3000", 
     methods: ["GET", "POST"],
   },
 });
 
-// A map to keep track of user IDs and their corresponding socket IDs
 const userSocketMap = new Map<string, string>();
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  // When a user logs in, you would receive their userId and store it
   socket.on('user_connected', (userId: string) => {
     userSocketMap.set(userId, socket.id);
     console.log(`User ${userId} connected with socket ID ${socket.id}`);
@@ -32,7 +36,6 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
 
-    // Remove the user from the map when they disconnect
     for (let [userId, socketId] of userSocketMap.entries()) {
       if (socketId === socket.id) {
         userSocketMap.delete(userId);
@@ -41,7 +44,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Handle private messages
   socket.on('private_message', async ({ to, content, senderId }) => {
     console.log("In the private message event senderid", senderId);
     const targetSocketId = userSocketMap.get(to);
@@ -50,7 +52,7 @@ io.on('connection', (socket) => {
     }
   
     try {
-      await dbConnect(); // Ensure the database connection
+      await dbConnect();
       const newMessage = new Message({
         senderId,
         receiverId: to,
