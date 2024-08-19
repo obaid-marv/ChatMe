@@ -1,27 +1,38 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { signup } from "../../redux/Auth/authSlice";
+import { useRouter } from "next/navigation";
 
 const Signup: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   const dispatch = useDispatch<AppDispatch>();
   const { status, error } = useSelector((state: RootState) => state.auth);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!name || !email || !password) {
       setFormError("All fields are required.");
       return;
     }
     setFormError(null);
-    dispatch(signup({ username: name, email, password }));
+    setSuccessMessage(null); // Clear any previous success messages
+    const resultAction = await dispatch(signup({ username: name, email, password }));
+  
+    if (signup.fulfilled.match(resultAction)) {
+      setSuccessMessage("Signup successful! Redirecting to login...");
+      setTimeout(() => router.push('/login'), 2000); // Redirect after 2 seconds
+    }
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
@@ -73,6 +84,9 @@ const Signup: React.FC = () => {
           {status === "failed" && !formError && (
             <div className="mb-4 text-red-600">{error}</div>
           )}
+          {successMessage && (
+            <div className="mb-4 text-green-600">{successMessage}</div>
+          )}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
@@ -84,6 +98,7 @@ const Signup: React.FC = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Signup;
