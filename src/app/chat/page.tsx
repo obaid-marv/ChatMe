@@ -42,11 +42,10 @@ const Chat = () => {
 
   const handleUserClick = (userId: string, username: string) => {
     router.push(`/chat/${userId}?username=${username}`);
-};
-
+  };
 
   return (
-    <div className="p-4">
+    <div className="p-4 mt-16 sm:mt-8">
       <h2 className="text-xl font-semibold mb-4">Search for a User</h2>
       <div className="flex items-center space-x-2">
         <input

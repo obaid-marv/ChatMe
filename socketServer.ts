@@ -14,6 +14,10 @@ app.get('/', (req,res)=> {
 })
 
 
+app.get('/developer', (req,res)=> {
+  res.json("Obaid ur rehman")
+})
+
 const server = createServer(app); 
 const io = new Server(server, {
   cors: {

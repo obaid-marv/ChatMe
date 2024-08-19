@@ -21,8 +21,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ClientProvider>
-          <Sidebar />
-          <main className="ml-64 p-8">{children}</main>
+          <div className="flex">
+            <Sidebar />
+            <main className="flex-1 lg:ml-64">
+              {children}
+            </main>
+          </div>
         </ClientProvider>
       </body>
     </html>
