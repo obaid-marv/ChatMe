@@ -3,12 +3,22 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import Cookies from 'js-cookie';
 
 const Chat = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState<any[]>([]);
   const [noUsersFound, setNoUsersFound] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const token = Cookies.get('authToken');
+    if (!token) {
+      router.push('/login');
+    }
+  }, [router]);
 
   const handleSearch = async (query: string) => {
     if (query.trim() === '') {
