@@ -10,6 +10,7 @@ const app = express();
 dotenv.config();
 app.use(express.json())
 app.get('/', (req,res)=> {
+  console.log("New get request from", req.url)
   res.json("Hi socket")
 })
 

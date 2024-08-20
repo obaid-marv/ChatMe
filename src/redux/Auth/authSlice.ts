@@ -20,9 +20,8 @@ export const initializeAuth = createAsyncThunk<any>(
   async (_, { rejectWithValue }) => {
     try {
       const token = Cookies.get('authToken');
-      console.log(token)
+  
       if (token) {
-        // Verify the token or fetch the user profile using the token
         const response = await axios.get('/api/auth/me', {
           headers: { Authorization: `Bearer ${token}` }
         });

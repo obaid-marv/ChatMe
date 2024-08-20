@@ -43,12 +43,32 @@ const Chat = () => {
 
   const debouncedSearch = debounce(handleSearch, 300);
 
+  const getConversations = async () =>{
+
+    try{
+      const messages = await axios.get('/api/messages/conversations')
+      console.log(messages);
+    }
+    catch(err){
+      console.log(err)
+    }
+
+  }
+
   useEffect(() => {
     debouncedSearch(searchQuery);
     return () => {
       debouncedSearch.cancel();
     };
   }, [searchQuery]);
+
+  useEffect(()=>{
+    const token = Cookies.get('authToken');
+    
+    if(token)
+      getConversations()
+
+  },[])
 
   const handleUserClick = (userId: string, username: string) => {
     router.push(`/chat/${userId}?username=${username}`);
