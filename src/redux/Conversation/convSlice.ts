@@ -58,5 +58,4 @@ const convSlice = createSlice({
   },
 });
 
-// Export the logout action
 export default convSlice.reducer;

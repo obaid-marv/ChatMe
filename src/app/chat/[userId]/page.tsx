@@ -25,8 +25,7 @@ const ChatMessage = () => {
   const [message, setMessage] = useState('');
   const [socket, setSocket] = useState<any>(null);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
+  const fetchMessages = async () => {
       try {
         const response = await axios.get(`/api/messages/conversation?userId=${userId}&currentUserId=${user?._id}`);
         setMessages(response.data.messages);
@@ -34,6 +33,8 @@ const ChatMessage = () => {
         console.error('Error fetching messages:', error);
       }
     };
+  useEffect(() => {
+    
 
     fetchMessages();
   }, [userId, user?._id]);

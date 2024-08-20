@@ -41,11 +41,11 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 z-10 bg-blue-500 text-white shadow-md transform ${
+        className={`fixed left-0 h-screen w-64 z-10 bg-blue-500 text-white shadow-md transform rounded-tr-2xl rounded-br-2xl ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 transition-transform duration-300 ease-in-out`}
+        } lg:translate-x-0 transition-transform duration-500 ease-in-out`}
       >
-        <div className="flex items-center justify-around h-16 bg-blue-600 shadow">
+        <div className="flex items-center justify-around h-16 bg-blue-600 shadow rounded-tr-2xl">
           <h1 className="text-2xl font-bold">ChatMe!</h1>
           {isOpen&&
           <FontAwesomeIcon icon={faSquareCaretLeft} size={"2x"} onClick={toggleSidebar} className="lg:hidden"/>
@@ -70,7 +70,7 @@ const Sidebar = () => {
                 <div className="text-white">Hello, {user.username}</div>
                 <button
                   onClick={handleLogout}
-                  className="w-24 p-2 bg-white font-bold text-blue-400 rounded-sm"
+                  className="w-24 p-2 bg-white font-bold text-blue-400 rounded-lg"
                 >
                   Logout
                 </button>
@@ -79,13 +79,13 @@ const Sidebar = () => {
               <>
                 <Link
                   href="/login"
-                  className="w-24 p-2 bg-white font-bold text-blue-400 rounded-sm"
+                  className="w-24 p-2 bg-white font-bold text-blue-400 rounded-lg"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="w-24 p-2 bg-white font-bold text-blue-400 rounded-sm"
+                  className="w-24 p-2 bg-white font-bold text-blue-400 rounded-lg"
                 >
                   Signup
                 </Link>

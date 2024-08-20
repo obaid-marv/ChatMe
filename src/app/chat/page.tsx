@@ -1,17 +1,23 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
 import Cookies from 'js-cookie';
+import { getConvs } from '@/redux/Conversation/convSlice';
+import MessageBar from '@/components/MessageBar';
 
 const Chat = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState<any[]>([]);
   const [noUsersFound, setNoUsersFound] = useState(false);
   const router = useRouter();
+  const { convs, status, error } = useSelector((state: RootState) => state.convs);
+  console.log(convs?.messagesWithUsernames);
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
     const token = Cookies.get('authToken');
@@ -43,18 +49,6 @@ const Chat = () => {
 
   const debouncedSearch = debounce(handleSearch, 300);
 
-  const getConversations = async () =>{
-
-    try{
-      const messages = await axios.get('/api/messages/conversations')
-      console.log(messages);
-    }
-    catch(err){
-      console.log(err)
-    }
-
-  }
-
   useEffect(() => {
     debouncedSearch(searchQuery);
     return () => {
@@ -63,10 +57,11 @@ const Chat = () => {
   }, [searchQuery]);
 
   useEffect(()=>{
-    const token = Cookies.get('authToken');
+    const convsFunc = async () =>{
+      await dispatch(getConvs())
+    }
+    convsFunc()
     
-    if(token)
-      getConversations()
 
   },[])
 
@@ -100,6 +95,23 @@ const Chat = () => {
           </li>
         ))}
       </ul>
+      {convs?.messagesWithUsernames.length==0 && 
+      <div>
+        <p>Start Chatting!</p>
+      </div>}
+      {convs?.messagesWithUsernames.map((val)=>{
+        return(
+          <MessageBar
+          name={val.username}
+          content={val.latestMessage.content}
+          key={val.otherUserId}
+          senderId={val.latestMessage.senderId}
+          otherUserId={val.otherUserId}
+          onClick={() => handleUserClick(val.otherUserId, val.username)}
+          
+          />
+        )
+      })}
     </div>
   );
 };
